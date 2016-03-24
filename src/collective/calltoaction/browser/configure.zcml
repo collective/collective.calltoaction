@@ -17,4 +17,14 @@
       directory="static"
       />
 
+  <!-- Render table of contents for DX -->
+  <browser:viewlet
+      name="collective.calltoaction"
+      for="*"
+      manager="plone.app.layout.viewlets.interfaces.IAboveContentBody"
+      class=".viewlet.CallToActionViewlet"
+      template="viewlet.pt"
+      permission="zope2.View"
+      />
+
 </configure>

@@ -1,0 +1,5 @@
+<p>Data from call-to-action portlets:
+</p>
+<ul>
+  <li tal:repeat="data view/data" tal:content="data" />
+</ul>
