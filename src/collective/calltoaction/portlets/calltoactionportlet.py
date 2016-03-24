@@ -68,7 +68,7 @@ class Renderer(base.Renderer):
 
     @property
     def available(self):
-        return True  # TODO
+        return 'debug_calltoaction' in self.request
 
 
 class AddForm(base.AddForm):
