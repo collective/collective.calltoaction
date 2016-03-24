@@ -81,6 +81,10 @@ class AddForm(base.AddForm):
     form_fields = form.Fields(ICallToActionPortlet)
 
     def create(self, data):
+        path = '/'.join(self.context.getPhysicalPath())
+        if not ('plone.leftcolumn' in path or 'plone.rightcolumn' in path):
+            raise ValueError('Sorry, this portlet is only supported '
+                             'in left and right columns.')
         return Assignment(**data)
 
 
