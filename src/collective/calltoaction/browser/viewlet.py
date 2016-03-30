@@ -1,26 +1,17 @@
 # -*- coding: utf-8 -*-
+from collective.calltoaction.portlets.calltoactionportlet import ICallToActionPortlet  # noqa
 from plone.app.layout.viewlets.common import ViewletBase
+from plone.portlets.interfaces import IPortletManager
+from plone.portlets.interfaces import IPortletRenderer
+from plone.portlets.interfaces import IPortletRetriever
 from zope.component import getMultiAdapter
 from zope.component import getUtility
-from plone.portlets.interfaces import IPortletManager
-from plone.portlets.interfaces import IPortletRetriever
-from collective.calltoaction.portlets.calltoactionportlet import ICallToActionPortlet  # noqa
 
 
 class CallToActionViewlet(ViewletBase):
 
     def update(self):
         self.data = []
-        # We could iterate over all portlet managers.  But this includes the
-        # dashboard portlet managers, which makes no sense unless you are
-        # viewing a dashboard.  By default only left and right are then
-        # available.  Possibly footer portlets on Plone 5.  And there could be
-        # managers from ContentWellPortlets.  We can hardcode left/right for
-        # now.  Maybe fail when we get added somewhere else.  We do that now in
-        # the Assignment class.
-        #
-        # from zope.component import getUtilitiesFor
-        # for manager_id, manager in getUtilitiesFor(IPortletManager):
         left = getUtility(IPortletManager, name='plone.leftcolumn')
         right = getUtility(IPortletManager, name='plone.rightcolumn')
         # For Plone 5 this can be nice:
@@ -36,6 +27,19 @@ class CallToActionViewlet(ViewletBase):
                 assignment = portlet['assignment']
                 if not ICallToActionPortlet.providedBy(assignment):
                     continue
-                # Proof of concept: we can get data from a portlet assignment
-                # in the left or right portlet manager.
-                self.data.append(assignment.milli_seconds_until_popup)
+                renderer = self._data_to_portlet(manager, assignment.data)
+                html = renderer.render()
+                info = {
+                    'assignment': assignment,
+                    'html': html,
+                }
+                self.data.append(info)
+
+    def _data_to_portlet(self, manager, data):
+        """Helper method to get the correct IPortletRenderer for the given
+        data object.
+
+        Adapted from plone.portlets/manager.py _dataToPortlet.
+        """
+        return getMultiAdapter((self.context, self.request, self.view,
+                                manager, data, ), IPortletRenderer)

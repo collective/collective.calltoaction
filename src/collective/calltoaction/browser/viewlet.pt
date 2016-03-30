@@ -1,5 +1,6 @@
-<p>Data from call-to-action portlets:
-</p>
-<ul>
-  <li tal:repeat="data view/data" tal:content="data" />
-</ul>
+<div class="calltoaction-wrapper" tal:repeat="info view/data">
+  Milli seconds until popup: <span tal:content="info/assignment/milli_seconds_until_popup" />
+  <div class="calltoaction-portlet-wrapper"
+       tal:attributes="data-timeout info/assignment/milli_seconds_until_popup"
+       tal:content="structure info/html" />
+</div>
