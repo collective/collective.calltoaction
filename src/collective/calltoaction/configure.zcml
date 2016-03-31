@@ -31,4 +31,11 @@
       post_handler=".setuphandlers.post_install"
       />
 
+  <genericsetup:registerProfile
+      name="testfixture"
+      title="collective.calltoaction testfixture"
+      directory="profiles/testfixture"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
 </configure>

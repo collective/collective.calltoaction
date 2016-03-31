@@ -34,16 +34,23 @@ Test Teardown  Close all browsers
 
 *** Test Cases ***************************************************************
 
-Scenario: As a member I want to be able to log into the website
-  [Documentation]  Example of a BDD-style (Behavior-driven development) test.
-  Given a login form
-   When I enter valid credentials
-   Then I am logged in
+Scenario: As a visitor I do not want to see the popup initially
+  Given I am on the home page
+   Then I do not see the popup
+
+Scenario: As a visitor I want to see the popup after a while
+  Given I am on the home page
+   When I wait a short time
+   Then I do see the popup
 
 
 *** Keywords *****************************************************************
 
 # --- Given ------------------------------------------------------------------
+
+I am on the home page
+  Go To  ${PLONE_URL}
+  Wait until page contains  Home
 
 a login form
   Go To  ${PLONE_URL}/login_form
@@ -58,9 +65,17 @@ I enter valid credentials
   Input Text  __ac_password  secret
   Click Button  Log in
 
+I wait a short time
+  Sleep  1.5
 
 # --- THEN -------------------------------------------------------------------
 
 I am logged in
   Wait until page contains  You are now logged in
   Page should contain  You are now logged in
+
+I do not see the popup
+  Element Should Not Be Visible  css=.portletCallToActionPortlet
+
+I do see the popup
+  Element Should Be Visible  css=.portletCallToActionPortlet

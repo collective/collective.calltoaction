@@ -22,6 +22,7 @@ class CollectiveCalltoactionLayer(PloneSandboxLayer):
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'collective.calltoaction:default')
+        applyProfile(portal, 'collective.calltoaction:testfixture')
 
 
 COLLECTIVE_CALLTOACTION_FIXTURE = CollectiveCalltoactionLayer()
