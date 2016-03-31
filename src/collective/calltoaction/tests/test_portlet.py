@@ -66,6 +66,21 @@ class TestPortlet(PortletTestCase):
         self.failUnless(isinstance(mapping.values()[0],
                                    calltoactionportlet.Assignment))
 
+    def test_invoke_add_view_fails_in_dashboard(self):
+        portlet = getUtility(
+            IPortletType,
+            name='collective.calltoaction.CallToActionPortlet')
+        mapping = self.portal.restrictedTraverse(
+            '++contextportlets++plone.dashboard1')
+        for m in mapping.keys():
+            del mapping[m]
+        addview = mapping.restrictedTraverse('+/' + portlet.addview)
+
+        # Adding is not allowed in the dashboard, only on left and right.
+        self.assertRaises(ValueError, addview.createAndAdd, data={})
+
+        self.assertEquals(len(mapping), 0)
+
     def test_invoke_edit_view(self):
         # NOTE: This test can be removed if the portlet has no edit form
         mapping = PortletAssignmentMapping()
@@ -112,8 +127,12 @@ class TestRenderer(PortletTestCase):
                           assignment=calltoactionportlet.Assignment())
         r = r.__of__(self.folder)
         r.update()
-        # output = r.render()
-        # TODO: Test output
+        # The portlet is not available, because we do not want to render it in
+        # a portlet column.
+        self.assertFalse(r.available)
+        # But the viewlet renders it.
+        output = r.render()
+        self.assertIn('portletCallToActionPortlet', output)
 
 
 def test_suite():
