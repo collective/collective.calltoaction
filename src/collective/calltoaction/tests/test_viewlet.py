@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from collective.calltoaction.browser.viewlet import CallToActionViewlet
 from collective.calltoaction.testing import COLLECTIVE_CALLTOACTION_INTEGRATION_TESTING  # noqa
 from plone import api
 from plone.app.testing import login
@@ -8,6 +7,7 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from zope.component import queryMultiAdapter
 from zope.contentprovider.interfaces import IContentProvider
+from zope.viewlet.interfaces import IViewlet
 
 import unittest
 
@@ -31,8 +31,10 @@ class ViewletTestCase(unittest.TestCase):
             (self.folder, request, view),
             IContentProvider,
             'plone.abovecontentbody')
-        viewlet = CallToActionViewlet(
-            self.folder, request, view, viewlet_manager)
+        viewlet = queryMultiAdapter(
+            (self.folder, request, view, viewlet_manager),
+            IViewlet,
+            'collective.calltoaction')
         viewlet.update()
         # We expect data from the portlet assignment in
         # profiles/testfixture/portlets.xml.
@@ -45,11 +47,9 @@ class ViewletTestCase(unittest.TestCase):
         portlet_html = portlet['html']
         self.assertIn('portletCallToAction', portlet_html)
         self.assertIn('portletCallToAction', portlet_html)
-        # viewlet.render() fails, presumably due to the way in which we directly
-        # instantiate the viewlet class, instead of getting it through the zope
-        # component architecture.
-        # viewlet_html = viewlet.render()
-        # self.assertIn(portlet_html, viewlet_html)
+        viewlet_html = viewlet.render()
+        self.assertIn(portlet_html, viewlet_html)
+        self.assertIn('data-timeout="1000"', viewlet_html)
 
 
 def test_suite():
