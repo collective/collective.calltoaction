@@ -3,9 +3,8 @@
   $(document).ready(function() {
     $('.calltoaction-portlet-wrapper').each( function() {
       // Check if the user has already seen this popup.
-      // var cookiename = $(this).attr('data-cookiename');
-      var cookiename = 'calltoaction';
-      // Note: readCookie and createCookie are define in
+      var cookiename = $(this).attr('data-cookiename');
+      // Note: readCookie and createCookie are defined in
       // Products/CMFPlone/skins/plone_ecmascript/cookie_functions.js
       if (!readCookie(cookiename)) {
         var timeout = $(this).attr('data-timeout');

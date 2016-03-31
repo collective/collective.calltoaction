@@ -9,6 +9,13 @@ from zope.component import getUtility
 from zope.formlib import form
 from zope.interface import implements
 
+import random
+import string
+
+
+def random_version():
+    return ''.join(random.sample(string.ascii_letters, 16))
+
 
 class ICallToActionPortlet(static.IStaticPortlet):
     """A portlet deriving from the static text portlet.
@@ -21,6 +28,15 @@ class ICallToActionPortlet(static.IStaticPortlet):
         default=0,
         required=True)
 
+    new_version = schema.Bool(
+        title=_(u'This is a new call to action'),
+        description=_(
+            u'Checking this option means everyone will get to see the new '
+            u'popup. When not checked, visitors who have already seen '
+            u'the popup will not see it again.'),
+        default=False,
+        required=False)
+
 
 class Assignment(static.Assignment):
     """Portlet assignment.
@@ -31,11 +47,16 @@ class Assignment(static.Assignment):
     header = _(u'title_call_to_action_portlet',
                default=u'Call to action portlet')
     milli_seconds_until_popup = 0
+    new_version = False
+    version = ''
 
     def __init__(self, **kwargs):
         self.milli_seconds_until_popup = kwargs.pop(
             'milli_seconds_until_popup', 0)
+        self.new_version = kwargs.pop(
+            'new_version', False)
         super(Assignment, self).__init__(**kwargs)
+        self.version = random_version()
 
     @property
     def title(self):
@@ -80,6 +101,7 @@ class AddForm(static.AddForm):
     """Portlet add form."""
     form_fields = form.Fields(ICallToActionPortlet)
     form_fields['text'].custom_widget = WYSIWYGWidget
+    form_fields = form_fields.omit('new_version')
     label = _(
         u'title_add_calltoaction_portlet',
         default=u'Add call to action portlet')
@@ -108,3 +130,11 @@ class EditForm(static.EditForm):
         u'description_calltoaction_portlet',
         default=u'A portlet which displays a call to action popup '
         'after waiting for some seconds.')
+
+    def __call__(self):
+        result = super(EditForm, self).__call__()
+        assignment = self.context
+        if assignment.new_version:
+            assignment.new_version = False
+            assignment.version = random_version()
+        return result
