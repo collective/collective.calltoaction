@@ -79,3 +79,4 @@ I do not see the popup
 
 I do see the popup
   Element Should Be Visible  css=.portletCallToActionPortlet
+  Page should contain  My popup action

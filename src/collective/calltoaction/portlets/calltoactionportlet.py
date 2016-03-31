@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from collective.calltoaction import _
+from plone.app.form.widgets.wysiwygwidget import WYSIWYGWidget
 from plone.app.portlets.portlets import base
 from plone.portlets.interfaces import IPortletDataProvider
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -16,14 +17,23 @@ class ICallToActionPortlet(IPortletDataProvider):
     same.
     """
 
+    header = schema.TextLine(
+        title=_(u'Title'),
+        required=False)
+
+    text = schema.Text(
+        title=_(u'Text'),
+        description=_(
+            u'The text to render, for example add an image here '
+            u'and a link to a form.'),
+        required=True)
+
     milli_seconds_until_popup = schema.Int(
         title=_(u"Milliseconds until popup"),
         description=_(
             u"The number of milliseconds we wait before showing the popup."),
         default=0,
         required=True)
-
-    # image, title, body
 
 
 class Assignment(base.Assignment):
@@ -35,17 +45,24 @@ class Assignment(base.Assignment):
 
     implements(ICallToActionPortlet)
 
+    header = u''
+    text = u''
     milli_seconds_until_popup = 0
 
-    def __init__(self, milli_seconds_until_popup=0):
+    def __init__(self,
+                 header=u'',
+                 text=u'',
+                 milli_seconds_until_popup=0,
+                 ):
         self.milli_seconds_until_popup = milli_seconds_until_popup
+        self.header = header
 
     @property
     def title(self):
         """This property is used to give the title of the portlet in the
         "manage portlets" screen.
         """
-        return "Call to action portlet"
+        return self.header or u"Call to action portlet"
 
 
 class Renderer(base.Renderer):
@@ -79,6 +96,7 @@ class AddForm(base.AddForm):
     constructs the assignment that is being added.
     """
     form_fields = form.Fields(ICallToActionPortlet)
+    form_fields['text'].custom_widget = WYSIWYGWidget
 
     def create(self, data):
         path = '/'.join(self.context.getPhysicalPath())
@@ -95,3 +113,4 @@ class EditForm(base.EditForm):
     zope.formlib which fields to display.
     """
     form_fields = form.Fields(ICallToActionPortlet)
+    form_fields['text'].custom_widget = WYSIWYGWidget

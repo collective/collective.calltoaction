@@ -132,7 +132,10 @@ class TestRenderer(PortletTestCase):
         self.assertFalse(r.available)
         # But the viewlet renders it.
         output = r.render()
+        # css class
         self.assertIn('portletCallToActionPortlet', output)
+        # title
+        self.assertIn('My popup action', output)
 
 
 def test_suite():

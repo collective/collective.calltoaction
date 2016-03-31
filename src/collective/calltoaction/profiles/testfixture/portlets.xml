@@ -9,6 +9,7 @@
       name="calltoaction"
       >
     <property name="milli_seconds_until_popup">1000</property>
+    <property name="header">My popup action</property>
   </assignment>
 
 </portlets>

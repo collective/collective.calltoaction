@@ -1,9 +1,9 @@
 <dl class="portlet portletCallToActionPortlet"
     i18n:domain="collective.calltoaction">
 
-    <dt class="portletHeader">
+    <dt class="portletHeader" tal:condition="view/data/header|nothing">
         <span class="portletTopLeft"></span>
-        Header
+        <h2 tal:content="view/data/header" />
         <span class="portletTopRight"></span>
     </dt>
 
@@ -11,7 +11,7 @@
         Body text
     </dd>
 
-    <dd class="portletFooter">
+    <dd class="portletFooter" tal:condition="view/data/header|nothing">
         <span class="portletBottomLeft"></span>
         Footer
         <span class="portletBottomRight"></span>
