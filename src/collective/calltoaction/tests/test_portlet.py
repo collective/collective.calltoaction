@@ -122,9 +122,16 @@ class TestRenderer(PortletTestCase):
                                IPortletRenderer)
 
     def test_render(self):
-        # TODO: Pass any keyword arguments to the Assignment constructor.
-        r = self.renderer(context=self.portal,
-                          assignment=calltoactionportlet.Assignment())
+        r = self.renderer(
+            context=self.portal,
+            assignment=calltoactionportlet.Assignment(
+                header='My popup header',
+                text='My popup text',
+                footer='My popup footer',
+                omit_border=False,
+                more_url='http://plone.org/',
+                milli_seconds_until_popup=1000,
+                ))
         r = r.__of__(self.folder)
         r.update()
         # The portlet is not available, because we do not want to render it in
@@ -133,9 +140,12 @@ class TestRenderer(PortletTestCase):
         # But the viewlet renders it.
         output = r.render()
         # css class
-        self.assertIn('portletCallToActionPortlet', output)
-        # title
-        self.assertIn('My popup action', output)
+        self.assertIn('portletCallToAction', output)
+        # fields
+        self.assertIn('My popup header', output)
+        self.assertIn('My popup text', output)
+        self.assertIn('My popup footer', output)
+        self.assertIn('http://plone.org', output)
 
 
 def test_suite():

@@ -75,8 +75,11 @@ I am logged in
   Page should contain  You are now logged in
 
 I do not see the popup
-  Element Should Not Be Visible  css=.portletCallToActionPortlet
+  Element Should Not Be Visible  css=.portletCallToAction
 
 I do see the popup
-  Element Should Be Visible  css=.portletCallToActionPortlet
-  Page should contain  My popup action
+  Element Should Be Visible  css=.portletCallToAction
+  Page should contain  My popup header
+  Page should contain  My popup text
+  Page should contain  My popup footer
+  Element Should Be Visible  xpath=//a[@href='http://plone.org/']

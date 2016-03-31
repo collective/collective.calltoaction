@@ -1,76 +1,55 @@
 # -*- coding: utf-8 -*-
 from collective.calltoaction import _
 from plone.app.form.widgets.wysiwygwidget import WYSIWYGWidget
-from plone.app.portlets.portlets import base
-from plone.portlets.interfaces import IPortletDataProvider
+from plone.i18n.normalizer.interfaces import IIDNormalizer
+from plone.portlet.static import static
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope import schema
+from zope.component import getUtility
 from zope.formlib import form
 from zope.interface import implements
 
 
-class ICallToActionPortlet(IPortletDataProvider):
-    """A portlet
-
-    It inherits from IPortletDataProvider because for this portlet, the
-    data that is being rendered and the portlet assignment itself are the
-    same.
+class ICallToActionPortlet(static.IStaticPortlet):
+    """A portlet deriving from the static text portlet.
     """
 
-    header = schema.TextLine(
-        title=_(u'Title'),
-        required=False)
-
-    text = schema.Text(
-        title=_(u'Text'),
-        description=_(
-            u'The text to render, for example add an image here '
-            u'and a link to a form.'),
-        required=True)
-
     milli_seconds_until_popup = schema.Int(
-        title=_(u"Milliseconds until popup"),
+        title=_(u'Milliseconds until popup'),
         description=_(
-            u"The number of milliseconds we wait before showing the popup."),
+            u'The number of milliseconds we wait before showing the popup.'),
         default=0,
         required=True)
 
 
-class Assignment(base.Assignment):
+class Assignment(static.Assignment):
     """Portlet assignment.
-
-    This is what is actually managed through the portlets UI and associated
-    with columns.
     """
 
     implements(ICallToActionPortlet)
 
-    header = u''
-    text = u''
+    header = _(u'title_call_to_action_portlet',
+               default=u'Call to action portlet')
     milli_seconds_until_popup = 0
 
-    def __init__(self,
-                 header=u'',
-                 text=u'',
-                 milli_seconds_until_popup=0,
-                 ):
-        self.milli_seconds_until_popup = milli_seconds_until_popup
-        self.header = header
+    def __init__(self, **kwargs):
+        self.milli_seconds_until_popup = kwargs.pop(
+            'milli_seconds_until_popup', 0)
+        super(Assignment, self).__init__(**kwargs)
 
     @property
     def title(self):
         """This property is used to give the title of the portlet in the
-        "manage portlets" screen.
+        'manage portlets' screen. Here, we use the title that the user gave or
+        static string if title not defined.
         """
-        return self.header or u"Call to action portlet"
+        return self.header or _(
+            u'title_call_to_action_portlet',
+            default=u'Call to action portlet')
 
 
-class Renderer(base.Renderer):
+class Renderer(static.Renderer):
     """Portlet renderer.
-
-    This is registered in configure.zcml. The referenced page template is
-    rendered, and the implicit variable 'view' will refer to an instance
-    of this class. Other methods can be added and referenced in the template.
 
     We want to show nothing here by default.  The rendering should be
     handled by a viewlet.  Reason: if this is the only available
@@ -87,16 +66,27 @@ class Renderer(base.Renderer):
     def available(self):
         return 'debug_calltoaction' in self.request
 
+    def css_class(self):
+        """Generate a CSS class from the portlet header
+        """
+        header = self.data.header
+        if header:
+            normalizer = getUtility(IIDNormalizer)
+            return "portlet-calltoaction-%s" % normalizer.normalize(header)
+        return "portlet-calltoaction"
 
-class AddForm(base.AddForm):
-    """Portlet add form.
 
-    This is registered in configure.zcml. The form_fields variable tells
-    zope.formlib which fields to display. The create() method actually
-    constructs the assignment that is being added.
-    """
+class AddForm(static.AddForm):
+    """Portlet add form."""
     form_fields = form.Fields(ICallToActionPortlet)
     form_fields['text'].custom_widget = WYSIWYGWidget
+    label = _(
+        u'title_add_calltoaction_portlet',
+        default=u'Add call to action portlet')
+    description = _(
+        u'description_calltoaction_portlet',
+        default=u'A portlet which displays a call to action popup '
+        'after waiting for some seconds.')
 
     def create(self, data):
         path = '/'.join(self.context.getPhysicalPath())
@@ -106,11 +96,15 @@ class AddForm(base.AddForm):
         return Assignment(**data)
 
 
-class EditForm(base.EditForm):
+class EditForm(static.EditForm):
     """Portlet edit form.
-
-    This is registered with configure.zcml. The form_fields variable tells
-    zope.formlib which fields to display.
     """
     form_fields = form.Fields(ICallToActionPortlet)
     form_fields['text'].custom_widget = WYSIWYGWidget
+    label = _(
+        u'title_edit_calltoaction_portlet',
+        default=u'Edit call to action portlet')
+    description = _(
+        u'description_calltoaction_portlet',
+        default=u'A portlet which displays a call to action popup '
+        'after waiting for some seconds.')
