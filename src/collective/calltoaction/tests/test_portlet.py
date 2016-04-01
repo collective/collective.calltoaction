@@ -131,7 +131,7 @@ class TestRenderer(PortletTestCase):
                 omit_border=False,
                 more_url='http://plone.org/',
                 milli_seconds_until_popup=1000,
-                ))
+            ))
         r = r.__of__(self.folder)
         r.update()
         # The portlet is not available, because we do not want to render it in
