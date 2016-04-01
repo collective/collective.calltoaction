@@ -28,11 +28,13 @@
               closeOnClick: true,
               // load it immediately after the construction
               load: true,
-              onClose: function() {
-                // Set cookie to avoid showing overlay twice to the same user.
-                createCookie(cookiename, 'y', 365);
-              },
             });
+            // Set cookie to avoid showing overlay twice to the same
+            // user.  We could do this on certain events, but you have
+            // to catch them all: onClose of the overlay, clicking on
+            // a link in the overlay, etcetera.  Much easier to simply
+            // set the cookie at the moment we show the overlay.
+            createCookie(cookiename, 'y', 365);
           },
           timeout);
       };
