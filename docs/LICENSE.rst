@@ -1,4 +1,4 @@
-collective.calltoaction Copyright 2015, Maurits van Rees
+collective.calltoaction Copyright 2016, Zest Software
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License version 2
