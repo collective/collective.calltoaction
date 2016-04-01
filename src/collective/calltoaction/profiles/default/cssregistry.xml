@@ -7,7 +7,7 @@
       cookable="True"
       enabled="True"
       expression=""
-      id="++resource++collective.calltoaction/calltoaction.css"
+      id="++theme++collective.calltoaction/calltoaction.css"
       media="screen"
       rel="stylesheet"
       rendering="link"

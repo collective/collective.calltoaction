@@ -22,7 +22,7 @@
   <!-- Publish static files -->
   <plone:static
       name="collective.calltoaction"
-      type="resource"
+      type="theme"
       directory="resources"
       />
 
