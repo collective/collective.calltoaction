@@ -34,14 +34,14 @@ Test Teardown  Close all browsers
 
 *** Test Cases ***************************************************************
 
-Scenario: As a visitor I do not want to see the popup initially
+Scenario: As a visitor I do not want to see the overlay initially
   Given I am on the home page
-   Then I do not see the popup
+   Then I do not see the overlay
 
-Scenario: As a visitor I want to see the popup after a while
+Scenario: As a visitor I want to see the overlay after a while
   Given I am on the home page
    When I wait a short time
-   Then I do see the popup
+   Then I do see the overlay
 
 
 *** Keywords *****************************************************************
@@ -74,12 +74,12 @@ I am logged in
   Wait until page contains  You are now logged in
   Page should contain  You are now logged in
 
-I do not see the popup
+I do not see the overlay
   Element Should Not Be Visible  css=.portletCallToAction
 
-I do see the popup
+I do see the overlay
   Element Should Be Visible  css=.portletCallToAction
-  Page should contain  My popup header
-  Page should contain  My popup text
-  Page should contain  My popup footer
+  Page should contain  My overlay header
+  Page should contain  My overlay text
+  Page should contain  My overlay footer
   Element Should Be Visible  xpath=//a[@href='http://plone.org/']
