@@ -21,6 +21,7 @@
   <browser:viewlet
       name="collective.calltoaction"
       for="*"
+      view="plone.app.layout.globals.interfaces.IViewView"
       manager="plone.app.layout.viewlets.interfaces.IAboveContentBody"
       class=".viewlet.CallToActionViewlet"
       template="viewlet.pt"
