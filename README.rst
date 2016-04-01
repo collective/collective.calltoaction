@@ -8,6 +8,9 @@ collective.calltoaction
 
 Tell me what your product does
 
+.. image:: https://travis-ci.org/collective/collective.calltoaction.svg?branch=master
+    :target: https://travis-ci.org/collective/collective.calltoaction
+
 Features
 --------
 
