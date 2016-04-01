@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from collective.calltoaction import _
-from plone.app.form.widgets.wysiwygwidget import WYSIWYGWidget
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 from plone.portlet.static import static
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -11,6 +10,13 @@ from zope.interface import implements
 
 import random
 import string
+
+try:
+    # On Plone 4 we need a special widget
+    from plone.app.form.widgets.wysiwygwidget import WYSIWYGWidget
+except ImportError:
+    # On Plone 5 not.
+    WYSIWYGWidget = None
 
 
 def random_version():
@@ -100,7 +106,8 @@ class Renderer(static.Renderer):
 class AddForm(static.AddForm):
     """Portlet add form."""
     form_fields = form.Fields(ICallToActionPortlet)
-    form_fields['text'].custom_widget = WYSIWYGWidget
+    if WYSIWYGWidget is not None:
+        form_fields['text'].custom_widget = WYSIWYGWidget
     form_fields = form_fields.omit('new_version')
     label = _(
         u'title_add_calltoaction_portlet',
@@ -122,7 +129,8 @@ class EditForm(static.EditForm):
     """Portlet edit form.
     """
     form_fields = form.Fields(ICallToActionPortlet)
-    form_fields['text'].custom_widget = WYSIWYGWidget
+    if WYSIWYGWidget is not None:
+        form_fields['text'].custom_widget = WYSIWYGWidget
     label = _(
         u'title_edit_calltoaction_portlet',
         default=u'Edit call to action portlet')

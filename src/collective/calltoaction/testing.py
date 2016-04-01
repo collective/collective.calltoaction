@@ -3,9 +3,16 @@ from plone.app.robotframework.testing import REMOTE_LIBRARY_BUNDLE_FIXTURE
 from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
-from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 from plone.testing import z2
+
+try:
+    # Plone 5 (or maybe Plone 4 with plone.app.contenttypes)
+    from plone.app.contenttypes.testing import (
+        PLONE_APP_CONTENTTYPES_FIXTURE as PLONE_FIXTURE)
+except ImportError:
+    # Plone 4
+    from plone.app.testing import PLONE_FIXTURE
 
 import collective.calltoaction
 
