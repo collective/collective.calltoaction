@@ -1,12 +1,13 @@
 (function($) {
   "use strict";
   $(document).ready(function() {
+    var overlay_set = false;
     $('.calltoaction-portlet-wrapper').each( function() {
       // Check if the user has already seen this overlay.
       var cookiename = $(this).attr('data-cookiename');
       // Note: readCookie and createCookie are defined in
       // Products/CMFPlone/skins/plone_ecmascript/cookie_functions.js
-      if (!readCookie(cookiename)) {
+      if (!overlay_set && !readCookie(cookiename)) {
         var timeout = $(this).attr('data-timeout');
         var el = $(this);
         setTimeout(
@@ -37,6 +38,8 @@
             createCookie(cookiename, 'y', 365);
           },
           timeout);
+        // We setup only one overlay, otherwise it gets a bit crazy.
+        overlay_set = true;
       };
     });
   });
