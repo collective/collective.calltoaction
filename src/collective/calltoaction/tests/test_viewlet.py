@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from collective.calltoaction.testing import COLLECTIVE_CALLTOACTION_INTEGRATION_TESTING  # noqa
 from plone import api
+from plone.app.layout.globals.interfaces import IViewView
 from plone.app.testing import login
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from zope.component import queryMultiAdapter
 from zope.contentprovider.interfaces import IContentProvider
+from zope.interface import alsoProvides
 from zope.viewlet.interfaces import IViewlet
 
 import unittest
@@ -24,9 +26,11 @@ class ViewletTestCase(unittest.TestCase):
         self.folder = api.content.create(
             container=self.portal, type='Folder', title='Folder')
 
-    def test_viewlet(self):
+    def test_viewlet_only_on_view(self):
+        # When the view is not on IViewView, the viewlet is not registered.
         request = self.folder.REQUEST
         view = self.folder.restrictedTraverse('@@plone')
+        self.assertFalse(IViewView.providedBy(view))
         viewlet_manager = queryMultiAdapter(
             (self.folder, request, view),
             IContentProvider,
@@ -35,6 +39,22 @@ class ViewletTestCase(unittest.TestCase):
             (self.folder, request, view, viewlet_manager),
             IViewlet,
             'collective.calltoaction')
+        self.assertTrue(viewlet is None)
+
+    def test_viewlet(self):
+        request = self.folder.REQUEST
+        view = self.folder.restrictedTraverse('@@plone')
+        alsoProvides(view, IViewView)
+        self.assertTrue(IViewView.providedBy(view))
+        viewlet_manager = queryMultiAdapter(
+            (self.folder, request, view),
+            IContentProvider,
+            'plone.abovecontentbody')
+        viewlet = queryMultiAdapter(
+            (self.folder, request, view, viewlet_manager),
+            IViewlet,
+            'collective.calltoaction')
+        self.assertTrue(viewlet is not None)
         viewlet.update()
         # We expect data from the portlet assignment in
         # profiles/testfixture/portlets.xml.
