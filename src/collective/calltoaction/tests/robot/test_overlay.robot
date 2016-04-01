@@ -43,6 +43,14 @@ Scenario: As a visitor I want to see the overlay after a while
    When I wait a short time
    Then I do see the overlay
 
+Scenario: As a visitor I do not want to see the overlay a second time
+  Given I am on the home page
+   When I wait a short time
+   And I do see the overlay
+   And I reload the page
+   And I wait a short time
+   Then I do not see the overlay
+
 
 *** Keywords *****************************************************************
 
@@ -67,6 +75,10 @@ I enter valid credentials
 
 I wait a short time
   Sleep  1.5
+
+I reload the page
+  Reload Page
+
 
 # --- THEN -------------------------------------------------------------------
 
