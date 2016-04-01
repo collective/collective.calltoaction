@@ -27,10 +27,10 @@ class ICallToActionPortlet(static.IStaticPortlet):
     """A portlet deriving from the static text portlet.
     """
 
-    milli_seconds_until_popup = schema.Int(
-        title=_(u'Milliseconds until popup'),
+    milli_seconds_until_overlay = schema.Int(
+        title=_(u'Milliseconds until overlay'),
         description=_(
-            u'The number of milliseconds we wait before showing the popup.'),
+            u'The number of milliseconds we wait before showing the overlay.'),
         default=0,
         required=True)
 
@@ -38,8 +38,8 @@ class ICallToActionPortlet(static.IStaticPortlet):
         title=_(u'This is a new call to action'),
         description=_(
             u'Checking this option means everyone will get to see the new '
-            u'popup. When not checked, visitors who have already seen '
-            u'the popup will not see it again.'),
+            u'overlay. When not checked, visitors who have already seen '
+            u'the overlay will not see it again.'),
         default=False,
         required=False)
 
@@ -52,13 +52,13 @@ class Assignment(static.Assignment):
 
     header = _(u'title_call_to_action_portlet',
                default=u'Call to action portlet')
-    milli_seconds_until_popup = 0
+    milli_seconds_until_overlay = 0
     new_version = False
     version = ''
 
     def __init__(self, **kwargs):
-        self.milli_seconds_until_popup = kwargs.pop(
-            'milli_seconds_until_popup', 0)
+        self.milli_seconds_until_overlay = kwargs.pop(
+            'milli_seconds_until_overlay', 0)
         self.new_version = kwargs.pop(
             'new_version', False)
         super(Assignment, self).__init__(**kwargs)
@@ -82,7 +82,7 @@ class Renderer(static.Renderer):
     handled by a viewlet.  Reason: if this is the only available
     portlet, then a portlet column will be shown even though we do not
     want to show anything initially.  Our content is only meant to be
-    shown in a popup.
+    shown in a overlay.
 
     We do keep the 'render' method, so the viewlet can call this.
     """
@@ -114,7 +114,7 @@ class AddForm(static.AddForm):
         default=u'Add call to action portlet')
     description = _(
         u'description_calltoaction_portlet',
-        default=u'A portlet which displays a call to action popup '
+        default=u'A portlet which displays a call to action overlay '
         'after waiting for some seconds.')
 
     def create(self, data):
@@ -136,7 +136,7 @@ class EditForm(static.EditForm):
         default=u'Edit call to action portlet')
     description = _(
         u'description_calltoaction_portlet',
-        default=u'A portlet which displays a call to action popup '
+        default=u'A portlet which displays a call to action overlay '
         'after waiting for some seconds.')
 
     def __call__(self):

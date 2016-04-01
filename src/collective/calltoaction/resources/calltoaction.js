@@ -2,7 +2,7 @@
   "use strict";
   $(document).ready(function() {
     $('.calltoaction-portlet-wrapper').each( function() {
-      // Check if the user has already seen this popup.
+      // Check if the user has already seen this overlay.
       var cookiename = $(this).attr('data-cookiename');
       // Note: readCookie and createCookie are defined in
       // Products/CMFPlone/skins/plone_ecmascript/cookie_functions.js

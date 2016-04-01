@@ -8,12 +8,12 @@
       type="collective.calltoaction.CallToActionPortlet"
       name="calltoaction"
       >
-    <property name="header">My popup header</property>
-    <property name="text">My popup text</property>
+    <property name="header">My overlay header</property>
+    <property name="text">My overlay text</property>
     <property name="omit_border">False</property>
-    <property name="footer">My popup footer</property>
+    <property name="footer">My overlay footer</property>
     <property name="more_url">http://plone.org/</property>
-    <property name="milli_seconds_until_popup">1000</property>
+    <property name="milli_seconds_until_overlay">1000</property>
   </assignment>
 
 </portlets>

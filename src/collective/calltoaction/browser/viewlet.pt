@@ -1,5 +1,5 @@
 <div class="calltoaction-portlet-wrapper"
      tal:repeat="info view/data"
-     tal:attributes="data-timeout info/assignment/milli_seconds_until_popup;
+     tal:attributes="data-timeout info/assignment/milli_seconds_until_overlay;
                      data-cookiename string:cta_${info/assignment/version}"
      tal:content="structure info/html" />

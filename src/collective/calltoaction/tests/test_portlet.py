@@ -125,12 +125,12 @@ class TestRenderer(PortletTestCase):
         r = self.renderer(
             context=self.portal,
             assignment=calltoactionportlet.Assignment(
-                header='My popup header',
-                text='My popup text',
-                footer='My popup footer',
+                header='My overlay header',
+                text='My overlay text',
+                footer='My overlay footer',
                 omit_border=False,
                 more_url='http://plone.org/',
-                milli_seconds_until_popup=1000,
+                milli_seconds_until_overlay=1000,
             ))
         r = r.__of__(self.folder)
         r.update()
@@ -142,9 +142,9 @@ class TestRenderer(PortletTestCase):
         # css class
         self.assertIn('portletCallToAction', output)
         # fields
-        self.assertIn('My popup header', output)
-        self.assertIn('My popup text', output)
-        self.assertIn('My popup footer', output)
+        self.assertIn('My overlay header', output)
+        self.assertIn('My overlay text', output)
+        self.assertIn('My overlay footer', output)
         self.assertIn('http://plone.org', output)
 
 

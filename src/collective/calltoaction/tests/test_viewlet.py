@@ -63,7 +63,7 @@ class ViewletTestCase(unittest.TestCase):
         self.assertIn('assignment', portlet.keys())
         self.assertIn('html', portlet.keys())
         assignment = portlet['assignment']
-        self.assertEqual(assignment.milli_seconds_until_popup, 1000)
+        self.assertEqual(assignment.milli_seconds_until_overlay, 1000)
         portlet_html = portlet['html']
         self.assertIn('portletCallToAction', portlet_html)
         self.assertIn('portletCallToAction', portlet_html)
