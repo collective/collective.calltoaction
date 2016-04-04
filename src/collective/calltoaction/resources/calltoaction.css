@@ -9,6 +9,7 @@
     /* standard decorations */
     width: 400px;
     border: 10px solid #666;
+    background: white;
 
     /* for modern browsers use semi-transparent color on the border. nice! */
     border: 10px solid rgba(82, 82, 82, 0.698);
@@ -16,4 +17,9 @@
     /* hot CSS3 features for mozilla and webkit-based browsers (rounded borders) */
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
+}
+
+/* If no border set a padding */
+div.portletCallToAction{
+  padding: 1em;
 }
