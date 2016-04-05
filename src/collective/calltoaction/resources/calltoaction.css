@@ -9,6 +9,7 @@
     /* standard decorations */
     width: 400px;
     border: 10px solid #666;
+    background: white;
 
     /* for modern browsers use semi-transparent color on the border. nice! */
     border: 10px solid rgba(82, 82, 82, 0.698);
