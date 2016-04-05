@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+from Acquisition import aq_inner
 from collective.calltoaction import _
+from plone.app.portlets.portlets import base
 from plone.i18n.normalizer.interfaces import IIDNormalizer
-from plone.portlet.static import static
+from plone.portlets.interfaces import IPortletDataProvider
+from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope import schema
 from zope.component import getUtility
@@ -9,7 +12,9 @@ from zope.formlib import form
 from zope.interface import implements
 
 import random
+import re
 import string
+
 
 try:
     # On Plone 4 we need a special widget
@@ -23,9 +28,22 @@ def random_version():
     return ''.join(random.sample(string.ascii_letters, 16))
 
 
-class ICallToActionPortlet(static.IStaticPortlet):
-    """A portlet deriving from the static text portlet.
+class ICallToActionPortlet(IPortletDataProvider):
+    """A schema for the call to action portlet.
     """
+
+    header = schema.TextLine(
+        title=_(u"Portlet header"),
+        description=_(u"Title of the rendered portlet"),
+        constraint=re.compile("[^\s]").match,
+        required=False)
+
+    # TODO: image
+
+    text = schema.Text(
+        title=_(u"Text"),
+        description=_(u"The text to render"),
+        required=True)
 
     milli_seconds_until_overlay = schema.Int(
         title=_(u'Milliseconds until overlay'),
@@ -44,7 +62,7 @@ class ICallToActionPortlet(static.IStaticPortlet):
         required=False)
 
 
-class Assignment(static.Assignment):
+class Assignment(base.Assignment):
     """Portlet assignment.
     """
 
@@ -52,16 +70,22 @@ class Assignment(static.Assignment):
 
     header = _(u'title_call_to_action_portlet',
                default=u'Call to action portlet')
+    text = u""
     milli_seconds_until_overlay = 0
     new_version = False
     version = ''
 
-    def __init__(self, **kwargs):
-        self.milli_seconds_until_overlay = kwargs.pop(
-            'milli_seconds_until_overlay', 0)
-        self.new_version = kwargs.pop(
-            'new_version', False)
-        super(Assignment, self).__init__(**kwargs)
+    def __init__(
+            self,
+            header=u"",
+            text=u"",
+            milli_seconds_until_overlay=0,
+            new_version=False,
+            ):
+        self.header = header
+        self.text = text
+        self.milli_seconds_until_overlay = milli_seconds_until_overlay
+        self.new_version = new_version
         self.version = random_version()
 
     @property
@@ -75,7 +99,7 @@ class Assignment(static.Assignment):
             default=u'Call to action portlet')
 
 
-class Renderer(static.Renderer):
+class Renderer(base.Renderer):
     """Portlet renderer.
 
     We want to show nothing here by default.  The rendering should be
@@ -102,8 +126,35 @@ class Renderer(static.Renderer):
             return "portlet-calltoaction-%s" % normalizer.normalize(header)
         return "portlet-calltoaction"
 
+    def transformed(self, mt='text/x-html-safe'):
+        """Use the safe_html transform to protect text output. This also
+        ensures that resolve UID links are transformed into real links.
+        """
+        orig = self.data.text
+        context = aq_inner(self.context)
+        # Portal transforms needs encoded strings
+        orig = orig.encode('utf-8')
 
-class AddForm(static.AddForm):
+        transformer = getToolByName(context, 'portal_transforms')
+        transformer_context = context
+        if hasattr(self, '__portlet_metadata__'):
+            if ('category' in self.__portlet_metadata__ and
+                    self.__portlet_metadata__['category'] == 'context'):
+                assignment_context_path = self.__portlet_metadata__['key']
+                assignment_context = context.unrestrictedTraverse(
+                    assignment_context_path)
+                transformer_context = assignment_context
+        data = transformer.convertTo(
+            mt, orig, context=transformer_context, mimetype='text/html')
+        result = data.getData()
+        if result:
+            if isinstance(result, str):
+                return unicode(result, 'utf-8')
+            return result
+        return None
+
+
+class AddForm(base.AddForm):
     """Portlet add form."""
     form_fields = form.Fields(ICallToActionPortlet)
     if WYSIWYGWidget is not None:
@@ -125,7 +176,7 @@ class AddForm(static.AddForm):
         return Assignment(**data)
 
 
-class EditForm(static.EditForm):
+class EditForm(base.EditForm):
     """Portlet edit form.
     """
     form_fields = form.Fields(ICallToActionPortlet)
