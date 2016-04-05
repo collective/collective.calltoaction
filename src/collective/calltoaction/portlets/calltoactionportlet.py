@@ -5,7 +5,6 @@ from plone.app.portlets.portlets import base
 from plone.app.vocabularies.catalog import SearchableTextSourceBinder
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 from plone.portlets.interfaces import IPortletDataProvider
-from Products.ATContentTypes.interface import IATImage
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope import schema
@@ -28,6 +27,22 @@ except ImportError:
     WYSIWYGWidget = None
     UberSelectionWidget = None
 
+# List of interfaces of image types.
+IMAGE_IFACES = []
+try:
+    # Archetypes
+    from Products.ATContentTypes.interfaces.image import IImageContent
+    IMAGE_IFACES.append(IImageContent.__identifier__)
+except ImportError:
+    pass
+try:
+    # Dexterity.  Note: this only works when the type has an image as primary
+    # field.
+    from plone.namedfile.interfaces import IImageScaleTraversable
+    IMAGE_IFACES.append(IImageScaleTraversable.__identifier__)
+except ImportError:
+    pass
+
 
 def random_version():
     return ''.join(random.sample(string.ascii_letters, 16))
@@ -47,7 +62,7 @@ class ICallToActionPortlet(IPortletDataProvider):
         title=_(u"Image"),
         required=False,
         source=SearchableTextSourceBinder(
-            {'object_provides': IATImage.__identifier__},
+            {'object_provides': IMAGE_IFACES},
             default_query='path:'))
 
     image_size = schema.Int(
