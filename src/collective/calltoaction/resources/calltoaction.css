@@ -7,19 +7,43 @@
     display: none;
 
     /* standard decorations */
-    width: 400px;
-    border: 10px solid #666;
     background: white;
-
-    /* for modern browsers use semi-transparent color on the border. nice! */
-    border: 10px solid rgba(82, 82, 82, 0.698);
-
-    /* hot CSS3 features for mozilla and webkit-based browsers (rounded borders) */
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
+    padding: 20px;
+    max-width: 400px;
+    -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.75);
 }
 
-/* If no border set a padding */
-div.portletCallToAction{
-  padding: 1em;
+
+.calltoaction-portlet-wrapper img{
+  margin-top: -20px;
+  margin-left: -20px;
+  /* Rotate div */
+  -ms-transform: rotate(-7deg); /* IE 9 */
+  -webkit-transform: rotate(-7deg); /* Chrome, Safari, Opera */
+  transform: rotate(-7deg);
+  max-width: 90%;
+}
+
+.manager_left{
+  left: 10px;
+  right: inherit !important;
+}
+.manager_right{
+  right: 10px;
+  left: inherit !important;
+}
+
+.calltoaction-portlet-wrapper  .portletHeader{
+  background: white;
+  margin-left: -20px;
+  z-index: 999;
+  position: relative;
+  padding: 10px 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.callToActionMain{
+  padding: 20px 0 10px 0;
 }
