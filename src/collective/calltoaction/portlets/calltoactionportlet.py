@@ -2,11 +2,14 @@
 from Acquisition import aq_inner
 from collective.calltoaction import _
 from plone.app.portlets.portlets import base
+from plone.app.vocabularies.catalog import SearchableTextSourceBinder
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 from plone.portlets.interfaces import IPortletDataProvider
+from Products.ATContentTypes.interface import IATImage
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope import schema
+from zope.component import getMultiAdapter
 from zope.component import getUtility
 from zope.formlib import form
 from zope.interface import implements
@@ -17,11 +20,13 @@ import string
 
 
 try:
-    # On Plone 4 we need a special widget
+    # On Plone 4 we need special widgets
     from plone.app.form.widgets.wysiwygwidget import WYSIWYGWidget
+    from plone.app.form.widgets.uberselectionwidget import UberSelectionWidget
 except ImportError:
     # On Plone 5 not.
     WYSIWYGWidget = None
+    UberSelectionWidget = None
 
 
 def random_version():
@@ -38,7 +43,20 @@ class ICallToActionPortlet(IPortletDataProvider):
         constraint=re.compile("[^\s]").match,
         required=False)
 
-    # TODO: image
+    image_ref = schema.Choice(
+        title=_(u"Image"),
+        required=False,
+        source=SearchableTextSourceBinder(
+            {'object_provides': IATImage.__identifier__},
+            default_query='path:'))
+
+    image_size = schema.Int(
+        title=_(u'Image size'),
+        description=_(
+            u'The height and width in pixels. The image will be scaled '
+            u'to fit within the given height and width.'),
+        default=200,
+        required=True)
 
     text = schema.Text(
         title=_(u"Text"),
@@ -70,6 +88,8 @@ class Assignment(base.Assignment):
 
     header = _(u'title_call_to_action_portlet',
                default=u'Call to action portlet')
+    image_ref = ''
+    image_size = 200
     text = u""
     milli_seconds_until_overlay = 0
     new_version = False
@@ -78,11 +98,15 @@ class Assignment(base.Assignment):
     def __init__(
             self,
             header=u"",
+            image_ref='',
+            image_size=200,
             text=u"",
             milli_seconds_until_overlay=0,
             new_version=False,
             ):
         self.header = header
+        self.image_ref = image_ref
+        self.image_size = image_size
         self.text = text
         self.milli_seconds_until_overlay = milli_seconds_until_overlay
         self.new_version = new_version
@@ -153,10 +177,35 @@ class Renderer(base.Renderer):
             return result
         return None
 
+    def get_image_tag(self):
+        """
+        return the image tag
+        """
+        image = self.get_image_object(self.data.image_ref)
+        if image:
+            size = self.data.image_size
+            tag = image.restrictedTraverse('@@images').tag(
+                height=size, width=size)
+            return tag
+        else:
+            return ""
+
+    def get_image_object(self, img_path):
+        """
+        get the image object
+        """
+        if not img_path:
+            return None
+        pps = getMultiAdapter(
+            (self.context, self.request), name='plone_portal_state')
+        root = pps.portal()
+        return root.restrictedTraverse(img_path.strip('/'), None)
+
 
 class AddForm(base.AddForm):
     """Portlet add form."""
     form_fields = form.Fields(ICallToActionPortlet)
+    form_fields['image_ref'].custom_widget = UberSelectionWidget
     if WYSIWYGWidget is not None:
         form_fields['text'].custom_widget = WYSIWYGWidget
     form_fields = form_fields.omit('new_version')
@@ -180,6 +229,7 @@ class EditForm(base.EditForm):
     """Portlet edit form.
     """
     form_fields = form.Fields(ICallToActionPortlet)
+    form_fields['image_ref'].custom_widget = UberSelectionWidget
     if WYSIWYGWidget is not None:
         form_fields['text'].custom_widget = WYSIWYGWidget
     label = _(
