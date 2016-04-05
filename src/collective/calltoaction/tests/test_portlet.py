@@ -127,9 +127,6 @@ class TestRenderer(PortletTestCase):
             assignment=calltoactionportlet.Assignment(
                 header='My overlay header',
                 text='My overlay text',
-                footer='My overlay footer',
-                omit_border=False,
-                more_url='http://plone.org/',
                 milli_seconds_until_overlay=1000,
             ))
         r = r.__of__(self.folder)
@@ -144,8 +141,6 @@ class TestRenderer(PortletTestCase):
         # fields
         self.assertIn('My overlay header', output)
         self.assertIn('My overlay text', output)
-        self.assertIn('My overlay footer', output)
-        self.assertIn('http://plone.org', output)
 
 
 def test_suite():

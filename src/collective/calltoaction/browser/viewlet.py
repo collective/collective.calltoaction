@@ -12,14 +12,13 @@ class CallToActionViewlet(ViewletBase):
 
     def update(self):
         self.data = []
-        left = getUtility(IPortletManager, name='plone.leftcolumn')
-        right = getUtility(IPortletManager, name='plone.rightcolumn')
         # For Plone 5 this can be nice:
         # footer = getUtility(IPortletManager, name='plone.footerportlets')
         # But portlets in Plone 5 need to be based on z3c.form, so it may be
         # tricky to support Plone 4 and 5 with the same code base.
 
-        for manager in (left, right):
+        for name in ('plone.leftcolumn', 'plone.rightcolumn'):
+            manager = getUtility(IPortletManager, name=name)
             retriever = getMultiAdapter(
                 (self.context, manager), IPortletRetriever)
             portlets = retriever.getPortlets()
@@ -31,9 +30,17 @@ class CallToActionViewlet(ViewletBase):
                 html = renderer.render()
                 info = {
                     'assignment': assignment,
+                    'css_class': self.css_manager_name(name),
                     'html': html,
                 }
                 self.data.append(info)
+
+    def css_manager_name(self, name):
+        if name == 'plone.leftcolumn':
+            return 'manager_left'
+        if name == 'plone.rightcolumn':
+            return 'manager_right'
+        return name
 
     def _data_to_portlet(self, manager, data):
         """Helper method to get the correct IPortletRenderer for the given

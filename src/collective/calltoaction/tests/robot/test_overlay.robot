@@ -93,5 +93,3 @@ I do see the overlay
   Element Should Be Visible  css=.portletCallToAction
   Page should contain  My overlay header
   Page should contain  My overlay text
-  Page should contain  My overlay footer
-  Element Should Be Visible  xpath=//a[@href='http://plone.org/']
