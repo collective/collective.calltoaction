@@ -16,6 +16,27 @@
             el.overlay({
               // custom top position
               top: 260,
+              // Before the overlay is gone be active place it correctly 
+              onBeforeLoad: function() {
+
+                if (el.hasClass("manager_right")){
+                  el.animate({right: -1000});
+                }else{
+                  el.animate({left: -1000});
+                };
+
+              },
+              // when the overlay is opened, animate our portlet
+              onLoad: function() {
+                
+                if (el.hasClass("manager_right")){
+                   el.animate({right: 10});
+                } 
+                else {
+                    el.animate({left: 10});
+                };
+
+              },
               // some mask tweaks suitable for facebox-looking dialogs
               mask: {
                 // you might also consider a "transparent" color for the mask
@@ -29,7 +50,9 @@
               closeOnClick: true,
               // load it immediately after the construction
               load: true,
+
             });
+            
             // Set cookie to avoid showing overlay twice to the same
             // user.  We could do this on certain events, but you have
             // to catch them all: onClose of the overlay, clicking on

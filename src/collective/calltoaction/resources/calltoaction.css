@@ -35,12 +35,8 @@
   max-width: 100%;
 }
 
-.manager_left{
-  left: 10px;
-  right: inherit !important;
-}
+
 .manager_right{
-  right: 10px;
   left: inherit !important;
 }
 
