@@ -4,7 +4,6 @@
     xmlns:plone="http://namespaces.plone.org/plone"
     i18n_domain="collective.calltoaction">
 
-  <!-- Render table of contents for DX -->
   <browser:viewlet
       name="collective.calltoaction"
       for="*"

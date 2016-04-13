@@ -10,8 +10,9 @@
 collective.calltoaction
 ==============================================================================
 
-This shows a call to action: an overlay with rich text.
-This calls the attention of a visitor to take action, usually to click a link.
+This shows a call to action: an overlay with an image, titel rich text.
+This calls the attention of a visitor to take action, usually to click a link
+or button.
 
 
 Compatibility
@@ -51,8 +52,7 @@ Examples
 --------
 
 This add-on is planned to be used on https://www.arbounie.nl and http://www.zeelandia.com,
-who have sponsored development,
-but the sites may not always have a call to action configured.
+who have sponsored development, but the sites may not always have a call to action configured.
 
 
 Translations
