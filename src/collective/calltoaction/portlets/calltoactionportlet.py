@@ -204,11 +204,11 @@ class Renderer(base.Renderer):
                 scale = scales.scale('image', height=size*2, width=size*2)
                 tag = scale.tag(height=size, width=size)
                 return tag
-            except:
-                try:
-                    tag = image.tag(height=size, width=size)
+            except AttributeError:
+                tag = image.tag(height=size, width=size)
+                if image.getField('image').get_size(image) > 0:
                     return tag
-                except:
+                else:
                     return ""
         else:
             return ""

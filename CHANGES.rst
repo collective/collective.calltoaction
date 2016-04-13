@@ -5,7 +5,8 @@ Changelog
 1.0b3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Except AttributeErrors only, and verify if an image is actually
+  uploaded to a newsitem.  [jladage]
 
 
 1.0b2 (2016-04-13)
