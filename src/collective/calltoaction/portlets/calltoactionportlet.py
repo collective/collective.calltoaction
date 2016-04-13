@@ -199,9 +199,17 @@ class Renderer(base.Renderer):
         image = self.get_image_object(self.data.image_ref)
         if image:
             size = self.data.image_size
-            tag = image.restrictedTraverse('@@images').tag(
-                height=size, width=size)
-            return tag
+            try:
+                scales = image.restrictedTraverse('@@images')
+                scale = scales.scale('image', height=size*2, width=size*2)
+                tag = scale.tag(height=size, width=size)
+                return tag
+            except:
+                try:
+                    tag = image.tag(height=size, width=size)
+                    return tag
+                except:
+                    return ""
         else:
             return ""
 
