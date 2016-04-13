@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0b3 (unreleased)
+1.0b3 (2016-04-13)
 ------------------
 
 - Except AttributeErrors only, and verify if an image is actually
