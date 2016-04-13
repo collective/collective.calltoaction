@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0b2 (unreleased)
+1.0b2 (2016-04-13)
 ------------------
 
 - Support both ATImage and ATNewsItem as providers of images.
