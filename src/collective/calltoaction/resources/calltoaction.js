@@ -15,7 +15,8 @@
             // Overlay adapted from http://jquerytools.github.io/demos/overlay/trigger.html
             el.overlay({
               // custom top position
-              top: 260,
+              top: "center",
+              fixed: true,
               // Before the overlay is gone be active place it correctly 
               onBeforeLoad: function() {
 
@@ -28,12 +29,12 @@
               },
               // when the overlay is opened, animate our portlet
               onLoad: function() {
-                
+
                 if (el.hasClass("manager_right")){
-                   el.animate({right: 10});
+                   el.animate({right: 15});
                 } 
                 else {
-                    el.animate({left: 10});
+                    el.animate({left: 15});
                 };
 
               },
