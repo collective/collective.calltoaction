@@ -14,7 +14,7 @@ long_description = '\n\n'.join([
 
 setup(
     name='collective.calltoaction',
-    version='1.0rc1',
+    version='1.0rc2.dev0',
     description="Portlet with call to action",
     long_description=long_description,
     # Get more from https://pypi.python.org/pypi?%3Aaction=list_classifiers
