@@ -2,8 +2,8 @@ Changelog
 =========
 
 
-1.0b4 (unreleased)
-------------------
+1.0rc1 (2016-04-20)
+-------------------
 
 - Set overlay fixed and center of the browser.
 
