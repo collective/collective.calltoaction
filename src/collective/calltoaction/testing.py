@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
+from plone import api
 from plone.app.robotframework.testing import REMOTE_LIBRARY_BUNDLE_FIXTURE
 from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PloneSandboxLayer
 from plone.testing import z2
+
+import collective.calltoaction
+
 
 try:
     # Plone 5 (or maybe Plone 4 with plone.app.contenttypes)
@@ -13,8 +17,6 @@ try:
 except ImportError:
     # Plone 4
     from plone.app.testing import PLONE_FIXTURE
-
-import collective.calltoaction
 
 
 class CollectiveCalltoactionLayer(PloneSandboxLayer):
@@ -29,6 +31,10 @@ class CollectiveCalltoactionLayer(PloneSandboxLayer):
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'collective.calltoaction:default')
+        # We have blacklisted context portlets in folder2.
+        # See the testfixture.
+        api.content.create(
+            container=portal, type='Folder', title='Folder2')
         applyProfile(portal, 'collective.calltoaction:testfixture')
 
 

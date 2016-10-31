@@ -13,4 +13,11 @@
     <property name="milli_seconds_until_overlay">1000</property>
   </assignment>
 
+  <blacklist
+    manager="plone.rightcolumn"
+    category="context"
+    location="/folder2"
+    status="block"
+    />
+
 </portlets>

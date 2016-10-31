@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collective.calltoaction.interfaces import ICollectiveCalltoactionSettings
 from collective.calltoaction.testing import COLLECTIVE_CALLTOACTION_INTEGRATION_TESTING  # noqa
 from plone import api
 from plone.app.layout.globals.interfaces import IViewView
@@ -6,6 +7,8 @@ from plone.app.testing import login
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
+from plone.registry.interfaces import IRegistry
+from zope.component import getUtility
 from zope.component import queryMultiAdapter
 from zope.contentprovider.interfaces import IContentProvider
 from zope.interface import alsoProvides
@@ -70,6 +73,37 @@ class ViewletTestCase(unittest.TestCase):
         viewlet_html = viewlet.render()
         self.assertIn(portlet_html, viewlet_html)
         self.assertIn('data-timeout="1000"', viewlet_html)
+
+    def test_portlet_inheritance(self):
+        portal = self.layer['portal']
+        folder = portal.folder2
+        request = folder.REQUEST
+        view = folder.restrictedTraverse('@@plone')
+        alsoProvides(view, IViewView)
+        self.assertTrue(IViewView.providedBy(view))
+        viewlet_manager = queryMultiAdapter(
+            (folder, request, view),
+            IContentProvider,
+            'plone.abovecontentbody')
+        viewlet = queryMultiAdapter(
+            (folder, request, view, viewlet_manager),
+            IViewlet,
+            'collective.calltoaction')
+        self.assertTrue(viewlet is not None)
+        viewlet.update()
+        # The portlet from the test fixture is blocked.
+        self.assertEqual(len(viewlet.data), 0)
+
+        # Show the action globally.  This ignores portlet inheritance.
+        registry = getUtility(IRegistry)
+        settings = registry.forInterface(
+            ICollectiveCalltoactionSettings, check=False)
+        self.assertFalse(settings.show_global)
+        settings.show_global = True
+
+        # Now we should see the portlet
+        viewlet.update()
+        self.assertEqual(len(viewlet.data), 1)
 
 
 def test_suite():

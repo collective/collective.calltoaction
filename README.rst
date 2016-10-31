@@ -18,7 +18,7 @@ or button.
 Compatibility
 -------------
 
-Works on Plone 4.3.x, tested explicitly on Plone 4.3.8.
+Works on Plone 4.3.x, tested explicitly on Plone 4.3.8 and 4.3.11.
 Not yet compatible with Plone 5: the javascript and css need work.
 
 
@@ -29,9 +29,10 @@ Features
   This is basically a copy of the static text portlet with a few extra options.
 
 - In the portlet you can set the number of milliseconds before the overlay is shown.
+  This can be several minutes and go over multiple pages:
+  using a cookie, we keep track of how long you have been on the site.
 
-- When the overlay is shown, a cookie is set.
-  We use this to show the overlay only once.
+- When the overlay is shown, the cookie is updated so that we show the overlay only once.
   The cookie is specific for this portlet:
   a new call to action portlet will be shown once too.
 
@@ -46,6 +47,9 @@ Features
 - You can create multiple portlets if you really want to,
   but only one overlay is shown on a page.
   If there are three portlets, and the user has already seen the first one but not the others, then the second one will be shown.
+
+- There is a control panel where you can say that the action is global across the site.
+  This can help if parts of your site block the portlets and you still want to see the action there.
 
 
 Examples
