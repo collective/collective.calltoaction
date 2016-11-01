@@ -14,4 +14,11 @@
       permission="zope2.View"
       />
 
+  <browser:page
+      name="calltoaction-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      permission="cmf.ManagePortal"
+      class=".controlpanel.CalltoactionControlPanelView"
+      />
+
 </configure>

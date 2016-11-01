@@ -5,7 +5,9 @@ Changelog
 1.0rc2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Added option to show action globally, regardless of blocked portlets.
+  The timeout is now always the time since the first visit of a page with this portlet.
+  [maurits]
 
 
 1.0rc1 (2016-04-20)

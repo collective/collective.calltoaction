@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
+from collective.calltoaction.interfaces import ICollectiveCalltoactionSettings
 from collective.calltoaction.portlets.calltoactionportlet import ICallToActionPortlet  # noqa
+from plone import api
 from plone.app.layout.viewlets.common import ViewletBase
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletRenderer
 from plone.portlets.interfaces import IPortletRetriever
+from plone.registry.interfaces import IRegistry
+from Products.Five import BrowserView
 from zope.component import getMultiAdapter
 from zope.component import getUtility
 
@@ -16,11 +20,18 @@ class CallToActionViewlet(ViewletBase):
         # footer = getUtility(IPortletManager, name='plone.footerportlets')
         # But portlets in Plone 5 need to be based on z3c.form, so it may be
         # tricky to support Plone 4 and 5 with the same code base.
-
+        registry = getUtility(IRegistry)
+        settings = registry.forInterface(
+            ICollectiveCalltoactionSettings, check=False)
+        self.show_global = settings.show_global
+        if self.show_global:
+            target = api.portal.get_navigation_root(self.context)
+        else:
+            target = self.context
         for name in ('plone.leftcolumn', 'plone.rightcolumn'):
             manager = getUtility(IPortletManager, name=name)
             retriever = getMultiAdapter(
-                (self.context, manager), IPortletRetriever)
+                (target, manager), IPortletRetriever)
             portlets = retriever.getPortlets()
             for portlet in portlets:
                 assignment = portlet['assignment']
@@ -48,5 +59,12 @@ class CallToActionViewlet(ViewletBase):
 
         Adapted from plone.portlets/manager.py _dataToPortlet.
         """
-        return getMultiAdapter((self.context, self.request, self.view,
+        if self.show_global:
+            target = api.portal.get_navigation_root(self.context)
+            # Use dummy view for the target context.
+            view = BrowserView(target, self.request)
+        else:
+            target = self.context
+            view = self.view
+        return getMultiAdapter((target, self.request, view,
                                 manager, data, ), IPortletRenderer)
