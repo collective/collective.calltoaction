@@ -74,7 +74,7 @@ I enter valid credentials
   Click Button  Log in
 
 I wait a short time
-  Sleep  1.5
+  Sleep  3
 
 I reload the page
   Reload Page
