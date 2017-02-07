@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.1 (unreleased)
+1.1 (2017-02-07)
 ----------------
 
 - Added form field to portlet.  You can select a PloneFormGen FormFolder with this.
