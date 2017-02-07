@@ -5,7 +5,10 @@ Changelog
 1.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added control panel option to always show the popup.
+  This ignores the cookie. This can be handy during development.
+  You need to run the upgrade in the add-ons control panel.
+  [maurits]
 
 
 1.0 (2016-11-01)

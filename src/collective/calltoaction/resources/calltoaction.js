@@ -7,19 +7,23 @@
       var cookie_value;
       var el;
       var cookiename;
+      var always;
       var start;
       var timeout;
       if (overlay_set) {
         return;
       }
-      // Check if the user has already seen this overlay.
-      cookiename = $(this).attr('data-cookiename');
-      // Note: readCookie and createCookie are defined in
-      // Products/CMFPlone/skins/plone_ecmascript/cookie_functions.js
-      cookie_value = readCookie(cookiename);
-      if (cookie_value === 'y') {
-        // already seen
-        return;
+      always = $(this).attr('data-always');
+      if (! always) {
+        // Check if the user has already seen this overlay.
+        cookiename = $(this).attr('data-cookiename');
+        // Note: readCookie and createCookie are defined in
+        // Products/CMFPlone/skins/plone_ecmascript/cookie_functions.js
+        cookie_value = readCookie(cookiename);
+        if (cookie_value === 'y') {
+          // already seen
+          return;
+        }
       }
       timeout = parseInt($(this).attr('data-timeout'));
       if (isNaN(timeout)) {
@@ -101,7 +105,9 @@
            set the cookie at the moment we show the overlay.
            The 'y' value means: yes, the user has seen it.
            */
-          createCookie(cookiename, 'y', 365);
+          if (! always) {
+            createCookie(cookiename, 'y', 365);
+          }
         },
         timeout);
       // We setup only one overlay, otherwise it gets a bit crazy.

@@ -28,6 +28,7 @@ class CallToActionViewlet(ViewletBase):
             target = api.portal.get_navigation_root(self.context)
         else:
             target = self.context
+        self.show_always = settings.show_always
         for name in ('plone.leftcolumn', 'plone.rightcolumn'):
             manager = getUtility(IPortletManager, name=name)
             retriever = getMultiAdapter(

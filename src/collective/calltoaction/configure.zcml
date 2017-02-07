@@ -61,4 +61,12 @@
       import_steps="plone.app.registry controlpanel"
       />
 
+  <genericsetup:upgradeDepends
+      source="1001"
+      destination="1002"
+      title="Add show_always registry setting"
+      profile="collective.calltoaction:default"
+      import_steps="plone.app.registry"
+      />
+
 </configure>

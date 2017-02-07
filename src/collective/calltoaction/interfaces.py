@@ -12,6 +12,19 @@ class ICollectiveCalltoactionLayer(IDefaultBrowserLayer):
 
 
 class ICollectiveCalltoactionSettings(Interface):
+
+    show_always = schema.Bool(
+        title=_(u'Show always, even when already seen'),
+        description=_(
+            u'description_always_show',
+            default=(
+                u'This is handy when you are experimenting or developing. '
+                u'Otherwise you would need to clear your cookies '
+                u'or mark the portlet as a new version '
+                u'each time you change something.')),
+        default=False,
+    )
+
     show_global = schema.Bool(
         title=_(u'Show global action'),
         description=_(
