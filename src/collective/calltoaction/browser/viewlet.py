@@ -40,6 +40,10 @@ class CallToActionViewlet(ViewletBase):
                     continue
                 renderer = self._data_to_portlet(manager, assignment.data)
                 html = renderer.render()
+                if not html:
+                    # Happens for example when the portlet references a form,
+                    # and the context is this same form.
+                    continue
                 info = {
                     'assignment': assignment,
                     'css_class': self.css_manager_name(name),

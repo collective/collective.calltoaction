@@ -160,11 +160,24 @@ class Renderer(base.Renderer):
     We do keep the 'render' method, so the viewlet can call this.
     """
 
-    render = ViewPageTemplateFile('calltoactionportlet.pt')
+    index = ViewPageTemplateFile('calltoactionportlet.pt')
+
+    # If we reference a form, and we *are* on that form,
+    # then we don't need to show anything.
+    form_is_context = False
 
     @property
     def available(self):
         return 'debug_calltoaction' in self.request
+
+    def render(self):
+        # Get the embedded form, if any.
+        self.embedded_form = self.get_embedded_form()
+        # The above call may have set self.form_is_context to True.
+        # We do not want to show the portlet then.
+        if self.form_is_context:
+            return u''
+        return self.index()
 
     def css_class(self):
         """Generate a CSS class from the portlet header
@@ -227,6 +240,9 @@ class Renderer(base.Renderer):
         """Return the embedded view of the FormFolder."""
         form = self._get_reference_object(self.data.form_ref)
         if form is None:
+            return u""
+        if form == self.context:
+            self.form_is_context = True
             return u""
         if form.portal_type != 'FormFolder':
             # Form got removed and something else added with the same id?

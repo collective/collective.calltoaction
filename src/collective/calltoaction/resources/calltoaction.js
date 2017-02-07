@@ -113,5 +113,38 @@
       // We setup only one overlay, otherwise it gets a bit crazy.
       overlay_set = true;
     });
+    var submitPloneFormGenForm = function(event){
+      var form = $(this).closest('form');
+      $.ajax({
+            url     : form.attr('action'),
+            type    : form.attr('method'),
+            dataType: 'html',  // we expect html back
+            data    : form.serialize(),
+            success : function( data ) {
+              // This is the html we get back from PloneFormGen.
+              // The submit was a success, but it might contain an error.
+              var parsed = $(data);
+              var content = parsed.find('.pfg-form');
+              if (content.length) {
+                // There is a form error. Show new form.
+                form.html(content);
+                // We need to use the same form submit for this new form.
+                $('.callToActionMain .pfg-embedded .formControls').delegate('input', 'click', submitPloneFormGenForm);
+              } else {
+                // Probably a Thanks page.
+                content = parsed.find('#content');
+                // Replace the entire portlet
+                form.closest('.portletCallToAction').html(content);
+                // Remove any buttons.
+                $(form).find('a.button').remove();
+              }
+            },
+            error   : function( xhr, err ) {
+              alert('Something went wrong: ' + err);
+            }
+        });
+      return false;
+    };
+    $('.callToActionMain .pfg-embedded .formControls').delegate('input', 'click', submitPloneFormGenForm);
   });
 })(jQuery);
