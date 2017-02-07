@@ -5,6 +5,10 @@ Changelog
 1.0.1 (unreleased)
 ------------------
 
+- Added form field to portlet.  You can select a PloneFormGen FormFolder with this.
+  The portlet then shows this as an embedded form under the title and text.
+  [maurits]
+
 - Added control panel option to always show the popup.
   This ignores the cookie. This can be handy during development.
   You need to run the upgrade in the add-ons control panel.

@@ -73,6 +73,13 @@ class ICallToActionPortlet(IPortletDataProvider):
         default=200,
         required=True)
 
+    form_ref = schema.Choice(
+        title=_(u"Form"),
+        required=False,
+        source=SearchableTextSourceBinder(
+            {'portal_type': 'FormFolder'},
+            default_query='path:'))
+
     text = schema.Text(
         title=_(u"Text"),
         description=_(u"The text to render"),
@@ -105,6 +112,7 @@ class Assignment(base.Assignment):
                default=u'Call to action portlet')
     image_ref = ''
     image_size = 200
+    form_ref = ''
     text = u""
     milli_seconds_until_overlay = 0
     new_version = False
@@ -115,6 +123,7 @@ class Assignment(base.Assignment):
             header=u"",
             image_ref='',
             image_size=200,
+            form_ref='',
             text=u"",
             milli_seconds_until_overlay=0,
             new_version=False,
@@ -122,6 +131,7 @@ class Assignment(base.Assignment):
         self.header = header
         self.image_ref = image_ref
         self.image_size = image_size
+        self.form_ref = form_ref
         self.text = text
         self.milli_seconds_until_overlay = milli_seconds_until_overlay
         self.new_version = new_version
@@ -196,7 +206,7 @@ class Renderer(base.Renderer):
         """
         return the image tag
         """
-        image = self.get_image_object(self.data.image_ref)
+        image = self._get_reference_object(self.data.image_ref)
         if image:
             size = self.data.image_size
             try:
@@ -213,22 +223,37 @@ class Renderer(base.Renderer):
         else:
             return ""
 
-    def get_image_object(self, img_path):
+    def get_embedded_form(self):
+        """Return the embedded view of the FormFolder."""
+        form = self._get_reference_object(self.data.form_ref)
+        if form is None:
+            return u""
+        if form.portal_type != 'FormFolder':
+            # Form got removed and something else added with the same id?
+            return u""
+        view = form.restrictedTraverse('fg_embedded_view_p3', None)
+        if view is None:
+            return u""
+        return view()
+
+    def _get_reference_object(self, path):
+        """Get the referenced object.
+
+        This is an image or a FormFolder.
         """
-        get the image object
-        """
-        if not img_path:
+        if not path:
             return None
         pps = getMultiAdapter(
             (self.context, self.request), name='plone_portal_state')
         root = pps.portal()
-        return root.restrictedTraverse(img_path.strip('/'), None)
+        return root.restrictedTraverse(path.strip('/'), None)
 
 
 class AddForm(base.AddForm):
     """Portlet add form."""
     form_fields = form.Fields(ICallToActionPortlet)
     form_fields['image_ref'].custom_widget = UberSelectionWidget
+    form_fields['form_ref'].custom_widget = UberSelectionWidget
     if WYSIWYGWidget is not None:
         form_fields['text'].custom_widget = WYSIWYGWidget
     form_fields = form_fields.omit('new_version')
@@ -253,6 +278,7 @@ class EditForm(base.EditForm):
     """
     form_fields = form.Fields(ICallToActionPortlet)
     form_fields['image_ref'].custom_widget = UberSelectionWidget
+    form_fields['form_ref'].custom_widget = UberSelectionWidget
     if WYSIWYGWidget is not None:
         form_fields['text'].custom_widget = WYSIWYGWidget
     label = _(

@@ -11,6 +11,9 @@
           tal:content="header" />
   </div>
 
-  <div class="callToActionMain" tal:content="structure view/transformed" />
+  <div class="callToActionMain">
+   <div tal:replace="structure view/transformed" />
+   <div tal:replace="structure view/get_embedded_form" />
+  </div>
 
 </div>
