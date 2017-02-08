@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.1.1 (unreleased)
+1.1.1 (2017-02-08)
 ------------------
 
 - Fixed problem when showing viewlet with form globally.
