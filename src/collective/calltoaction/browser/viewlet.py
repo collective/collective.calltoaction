@@ -39,7 +39,9 @@ class CallToActionViewlet(ViewletBase):
                 if not ICallToActionPortlet.providedBy(assignment):
                     continue
                 renderer = self._data_to_portlet(manager, assignment.data)
-                html = renderer.render()
+                # Pass the original context to the renderer so we can see
+                # if this is the same as the referenced form, if set.
+                html = renderer.render(orig_context=self.context)
                 if not html:
                     # Happens for example when the portlet references a form,
                     # and the context is this same form.

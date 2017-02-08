@@ -170,11 +170,17 @@ class Renderer(base.Renderer):
     def available(self):
         return 'debug_calltoaction' in self.request
 
-    def render(self):
+    def render(self, orig_context=None):
         # Get the embedded form, if any.
-        self.embedded_form = self.get_embedded_form()
+        self.embedded_form = self.get_embedded_form(orig_context=orig_context)
         # The above call may have set self.form_is_context to True.
-        # We do not want to show the portlet then.
+        # We do not want to show the portlet then.  Biggest reason is:
+        # when we show the viewlet/portlet on say the homepage, and
+        # the user submits the form and gets a validation error,
+        # then the we update the contents of the homepage portlet to show
+        # the form as we find it in the resulting page.  But the form may then
+        # be there twice: once in the content area, and once in the portlet
+        # that we see on that form page.  A bit hard to wrap your head around.
         if self.form_is_context:
             return u''
         return self.index()
@@ -236,12 +242,15 @@ class Renderer(base.Renderer):
         else:
             return ""
 
-    def get_embedded_form(self):
+    def get_embedded_form(self, orig_context=None):
         """Return the embedded view of the FormFolder."""
         form = self._get_reference_object(self.data.form_ref)
         if form is None:
             return u""
-        if form == self.context:
+        # Check if the form and the context are the same.
+        if orig_context is None:
+            orig_context = self.context
+        if form == orig_context:
             self.form_is_context = True
             return u""
         if form.portal_type != 'FormFolder':

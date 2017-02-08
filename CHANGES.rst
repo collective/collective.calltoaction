@@ -5,7 +5,11 @@ Changelog
 1.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed problem when showing viewlet with form globally.
+  After submit, the form could then be shown twice.
+  We had already fixed that for the normal case,
+  but not for the case where the viewlet is globally shown.
+  [maurits]
 
 
 1.1 (2017-02-07)
