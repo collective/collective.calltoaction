@@ -26,5 +26,3 @@ after_success:
   - bin/createcoverage
   - pip install coverage==3.7 coveralls
   - coveralls
-after_script:
-  - pkill -9 firefox
