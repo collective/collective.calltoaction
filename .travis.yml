@@ -28,6 +28,3 @@ after_success:
   - coveralls
 after_script:
   - pkill -9 firefox
-notifications:
-  email:
-    - m.van.rees@zestsoftware.nl
