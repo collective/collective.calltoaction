@@ -5,7 +5,9 @@ Changelog
 1.1.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added option to display the image tilted or normal.
+  Update Dutch translations.
+  [jladage]
 
 
 1.1.1 (2017-02-08)

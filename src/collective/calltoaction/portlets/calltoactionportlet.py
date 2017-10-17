@@ -73,6 +73,12 @@ class ICallToActionPortlet(IPortletDataProvider):
         default=200,
         required=True)
 
+    image_show_tilted = schema.Bool(
+        title=_(u"Show image tilted"),
+        description=_(
+            u'When checked the image will be displayed titled 7 degrees'),
+        default=True)
+
     form_ref = schema.Choice(
         title=_(u"Form"),
         required=False,
@@ -112,6 +118,7 @@ class Assignment(base.Assignment):
                default=u'Call to action portlet')
     image_ref = ''
     image_size = 200
+    image_show_tilted = True
     form_ref = ''
     text = u""
     milli_seconds_until_overlay = 0
@@ -123,6 +130,7 @@ class Assignment(base.Assignment):
             header=u"",
             image_ref='',
             image_size=200,
+            image_show_tilted=True,
             form_ref='',
             text=u"",
             milli_seconds_until_overlay=0,
@@ -131,6 +139,7 @@ class Assignment(base.Assignment):
         self.header = header
         self.image_ref = image_ref
         self.image_size = image_size
+        self.image_show_tilted = image_show_tilted
         self.form_ref = form_ref
         self.text = text
         self.milli_seconds_until_overlay = milli_seconds_until_overlay
@@ -226,12 +235,16 @@ class Renderer(base.Renderer):
         return the image tag
         """
         image = self._get_reference_object(self.data.image_ref)
+        if self.data.image_show_tilted:
+            css_class = 'tilted'
+        else:
+            css_class = ''
         if image:
             size = self.data.image_size
             try:
                 scales = image.restrictedTraverse('@@images')
                 scale = scales.scale('image', height=size*2, width=size*2)
-                tag = scale.tag(height=size, width=size)
+                tag = scale.tag(height=size, width=size, css_class=css_class)
                 return tag
             except AttributeError:
                 tag = image.tag(height=size, width=size)
