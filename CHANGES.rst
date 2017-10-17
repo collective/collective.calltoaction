@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.1.2 (unreleased)
+1.1.2 (2017-10-17)
 ------------------
 
 - Added option to display the image tilted or normal.
