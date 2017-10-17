@@ -5,7 +5,8 @@ Changelog
 1.1.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- CSS improvements for normal display of image.
+  [jladage]
 
 
 1.1.2 (2017-10-17)
