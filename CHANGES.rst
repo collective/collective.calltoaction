@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.1.3 (unreleased)
+1.1.3 (2017-10-17)
 ------------------
 
 - CSS improvements for normal display of image.
